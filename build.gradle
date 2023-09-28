@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id "org.sonarqube" version "4.0.0.2929"
+}
+
+wrapper {
+    gradleVersion = gradlewVersion
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    group = 'com.mjc.school'
+
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+        compileOnly "org.projectlombok:lombok:$lombokVersion"
+
+        implementation "io.springfox:springfox-boot-starter:$springfoxVersion"
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+
+        testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+        testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+
+        testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootPluginVersion"
+        testImplementation "com.tngtech.archunit:archunit-junit5:$archUnitVersion"
+        testImplementation "org.mockito:mockito-core:$mockitoVersion"
+        testImplementation "org.assertj:assertj-core:$assertJVersion"
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+        testImplementation {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs = [
+                "-Xlint:deprecation",
+                "-Xlint:unchecked",
+                "-parameters",
+        ]
+    }
+
+}
+
+tasks.named('sonarqube').configure {
+    dependsOn test
+}
