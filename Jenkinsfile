@@ -20,7 +20,7 @@ pipeline {
         stage('Sonar') {
             steps {
                 withSonarQubeEnv(installationName: 'SonarQube') {
-                  "./gradlew sonar \
+                  bat "./gradlew sonar \
                     -Dsonar.projectKey=stage4-module3-task \
                     -Dsonar.projectName='stage4-module3-task' \
                     -Dsonar.host.url=http://127.0.0.1:9000 \
