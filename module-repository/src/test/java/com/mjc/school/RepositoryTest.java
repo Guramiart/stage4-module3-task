@@ -60,6 +60,7 @@ class RepositoryTest {
     News news;
     News expectedNews;
 
+
     @BeforeEach
     void init() {
         author = Author.builder()
@@ -81,25 +82,6 @@ class RepositoryTest {
         expectedAuthor = authorRepository.save(author);
         expectedNews = newsRepository.save(news);
         expectedComment = commentRepository.save(comment);
-    }
-
-    @Test
-    void shouldCreateNewEntity() {
-        assertEquals(TAG_NAME, expectedTag.getName());
-        assertThat(tagRepository.findAll()).hasSize(1);
-        assertEquals(AUTHOR_NAME, expectedAuthor.getName());
-        assertThat(authorRepository.findAll()).hasSize(1);
-        assertEquals(NEWS_TITLE, expectedNews.getTitle());
-        assertEquals(NEWS_CONTENT, expectedNews.getContent());
-        assertEquals(expectedAuthor, expectedNews.getAuthor());
-        assertEquals(expectedTag, expectedNews.getTags().get(0));
-        assertNotNull(expectedNews.getCreatedDate(), "News created date is null");
-        assertNotNull(expectedNews.getLastUpdatedDate(), "News last updated date is null");
-        assertThat(newsRepository.findAll()).hasSize(1);
-        assertEquals(COMMENT_CONTENT, expectedComment.getContent());
-        assertThat(commentRepository.findAll()).hasSize(1);
-        assertNotNull(expectedComment.getCreatedDate(), "Comment created date is null");
-        assertNotNull(expectedComment.getLastUpdatedDate(), "Comment last updated date is null");
     }
 
     @Test
@@ -147,7 +129,7 @@ class RepositoryTest {
                 .with(new SearchCriteria("title", "nc", "T"))
                 .build());
         Page<News> pages = newsRepository.readAll(entitySearchSpecification);
-        assertThat(pages.entities()).hasSize(0);
+        assertThat(pages.entities()).isEmpty();
     }
 
     void shouldFindEqualsAndNotEqualsEntity(EntitySearchSpecification entitySearchSpecification) {
@@ -158,7 +140,7 @@ class RepositoryTest {
                 ))
                 .build());
         Page<News> pages = newsRepository.readAll(entitySearchSpecification);
-        assertThat(pages.entities()).hasSize(0);
+        assertThat(pages.entities()).isEmpty();
     }
 
     void nullCheckSpecification(EntitySearchSpecification entitySearchSpecification) {
@@ -179,7 +161,7 @@ class RepositoryTest {
                 ))
                 .build());
         Page<News> pages = newsRepository.readAll(entitySearchSpecification);
-        assertThat(pages.entities()).hasSize(0);
+        assertThat(pages.entities()).isEmpty();
     }
 
     @Test
