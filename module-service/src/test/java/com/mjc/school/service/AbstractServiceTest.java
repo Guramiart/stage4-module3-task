@@ -1,4 +1,4 @@
-package com.mjc.school;
+package com.mjc.school.service;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.filter.pagination.Page;
@@ -52,6 +52,8 @@ class AbstractServiceTest {
     @InjectMocks
     private NewsService newsService;
     @Spy
+    private NewsSearchFilterMapper searchFilterMapper;
+    @Spy
     private static BaseMapper<News, NewsDtoRequest, NewsDtoResponse> newsMapper =
             Mappers.getMapper(NewsMapper.class);
     @SpyBean
@@ -64,16 +66,16 @@ class AbstractServiceTest {
     private static final BaseMapper<Comment, CommentDtoRequest, CommentDtoResponse> commentMapper =
             Mappers.getMapper(CommentMapper.class);
 
-    @Spy
-    private NewsSearchFilterMapper newsSearchFilterMapper;
-
     private final News news = News.builder()
+            .id(1L)
             .title("NewsTitle")
             .content("NewsContent")
-            .build();;
+            .author(Author.builder().id(1L).build())
+            .tags(List.of(Tag.builder().id(1L).build()))
+            .build();
 
     private final NewsDtoRequest request =
-            new NewsDtoRequest("NewsTitle", "NewsContent", null, null, null);
+            new NewsDtoRequest("NewsTitle", "NewsContent", 1L, List.of(1L), List.of(1L));
 
     @BeforeAll
     public static void initMappers() {
@@ -108,16 +110,20 @@ class AbstractServiceTest {
 
     @Test
     void shouldCreateNewEntityAndReturnDto() {
-        given(newsMapper.dtoToModel(any())).willReturn(news);
+        given(newsMapper.dtoToModel(any(NewsDtoRequest.class))).willReturn(news);
         given(newsRepository.save(news)).willReturn(news);
 
         NewsDtoResponse newsDto = newsService.create(request);
         assertThat(newsDto).isNotNull();
+        assertEquals(newsDto.getTitle(), request.title());
+        assertEquals(newsDto.getContent(), request.content());
+        assertEquals(newsDto.getAuthorDto().getId(), request.authorId());
+        assertEquals(newsDto.getTagsDto().get(0).getId(), request.tagsId().get(0));
     }
 
     @Test
     void shouldThrowExceptionWhenCreateInvalidEntity() {
-        given(newsMapper.dtoToModel(any())).willReturn(news);
+        given(newsMapper.dtoToModel(any(NewsDtoRequest.class))).willReturn(news);
         given(newsRepository.save(any())).willThrow(new PersistentObjectException(""));
         Exception exception = assertThrows(ResourceConflictServiceException.class, () -> {
             newsService.create(request);
@@ -147,7 +153,7 @@ class AbstractServiceTest {
 
     @Test
     void shouldUpdateNews() {
-        given(newsMapper.dtoToModel(any())).willReturn(news);
+        given(newsMapper.dtoToModel(any(NewsDtoRequest.class))).willReturn(news);
         given(newsRepository.save(news)).willReturn(news);
         given(newsRepository.existsById(any())).willReturn(true);
         news.setContent("UpdatedContent");
@@ -159,7 +165,7 @@ class AbstractServiceTest {
 
     @Test
     void shouldThrowExceptionWhenUpdateNonExistNews() {
-        given(newsRepository.existsById(any())).willReturn(false);
+        given(newsRepository.existsById(any(Long.class))).willReturn(false);
         Exception exception = assertThrows(NotFoundException.class, () -> {
             newsService.update(1L, request);
         });
@@ -178,7 +184,7 @@ class AbstractServiceTest {
 
     @Test
     void shouldThrowExceptionWhenDeleteNonExistNews() {
-        given(newsRepository.existsById(any())).willReturn(false);
+        given(newsRepository.existsById(any(Long.class))).willReturn(false);
         Exception exception = assertThrows(NotFoundException.class, () -> {
             newsService.deleteById(1L);
         });

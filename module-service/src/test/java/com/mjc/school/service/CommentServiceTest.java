@@ -1,9 +1,10 @@
-package com.mjc.school;
+package com.mjc.school.service;
 
 import com.mjc.school.repository.impl.CommentRepository;
 import com.mjc.school.repository.impl.NewsRepository;
 import com.mjc.school.repository.model.Comment;
 import com.mjc.school.repository.model.News;
+import com.mjc.school.service.dto.request.CommentDtoRequest;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ServiceErrorCode;
 import com.mjc.school.service.filter.mapper.CommentSearchFilterMapper;
@@ -50,9 +51,12 @@ class CommentServiceTest {
 
     @Test
     void shouldFindCommentByNewsId() {
+        CommentDtoRequest dtoRequest = new CommentDtoRequest("Comment", 1L);
         given(newsRepository.existsById(1L)).willReturn(true);
         given(repository.readByNewsId(1L)).willReturn(List.of(comment));
         assertThat(service.readByNewsId(1L)).isNotEmpty();
+        assertEquals(dtoRequest.content(), service.readByNewsId(1L).get(0).getContent());
+        assertEquals(dtoRequest.newsId(), service.readByNewsId(1L).get(0).getNewsId());
     }
 
     @Test

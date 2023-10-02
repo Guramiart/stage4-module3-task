@@ -1,15 +1,15 @@
-package com.mjc.school;
+package com.mjc.school.service;
 
-import com.mjc.school.repository.impl.AuthorRepository;
 import com.mjc.school.repository.impl.NewsRepository;
-import com.mjc.school.repository.model.Author;
-import com.mjc.school.service.dto.request.AuthorDtoRequest;
-import com.mjc.school.service.dto.response.AuthorDtoResponse;
+import com.mjc.school.repository.impl.TagRepository;
+import com.mjc.school.repository.model.Tag;
+import com.mjc.school.service.dto.request.TagDtoRequest;
+import com.mjc.school.service.dto.response.TagDtoResponse;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ServiceErrorCode;
-import com.mjc.school.service.filter.mapper.AuthorSearchFilterMapper;
-import com.mjc.school.service.impl.AuthorService;
-import com.mjc.school.service.mapper.AuthorMapper;
+import com.mjc.school.service.filter.mapper.TagSearchFilterMapper;
+import com.mjc.school.service.impl.TagService;
+import com.mjc.school.service.mapper.TagMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,40 +28,40 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class AuthorServiceTest {
+class TagServiceTest {
     @Mock
-    private AuthorRepository repository;
+    TagRepository repository;
     @Mock
-    private NewsRepository newsRepository;
-    private AuthorService service;
+    NewsRepository newsRepository;
     @Spy
-    private AuthorMapper mapper = Mappers.getMapper(AuthorMapper.class);
+    private TagMapper mapper = Mappers.getMapper(TagMapper.class);
     @Spy
-    private AuthorSearchFilterMapper filterMapper;
-    private Author author;
+    private TagSearchFilterMapper filterMapper;
+    private TagService service;
+    private Tag tag;
 
     @BeforeEach
     public void setup() {
-        service = new AuthorService(repository, newsRepository, mapper, filterMapper);
-        author = Author.builder()
+        service = new TagService(repository, newsRepository, mapper, filterMapper);
+        tag = Tag.builder()
                 .id(1L)
-                .name("Author")
+                .name("Tag")
                 .build();
     }
 
     @Test
     void shouldMapAuthorModel() {
-        AuthorDtoRequest dto = new AuthorDtoRequest("Author");
-        assertEquals(author.getName(), mapper.dtoToModel(dto).getName());
+        TagDtoRequest dto = new TagDtoRequest("Tag");
+        assertEquals(tag.getName(), mapper.dtoToModel(dto).getName());
     }
 
     @Test
-    void shouldFindAuthorByNewsId() {
+    void shouldFindTagByNewsId() {
         final Long newsId = 1L;
         given(newsRepository.existsById(any())).willReturn(true);
-        given(repository.readByNewsId(any())).willReturn(List.of(author));
-        final AuthorDtoResponse expected = service.readByNewsId(newsId);
-        assertThat(expected).isNotNull();
+        given(repository.readByNewsId(any())).willReturn(List.of(tag));
+        final List<TagDtoResponse> expected = service.readByNewsId(newsId);
+        assertThat(expected).hasSize(1);
     }
 
     @Test
@@ -73,12 +73,11 @@ class AuthorServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAuthorByNewsIdIsNonExist() {
+    void shouldThrowExceptionWhenTagByNewsIdIsNonExist() {
         given(newsRepository.existsById(any())).willReturn(true);
         given(repository.readByNewsId(any())).willReturn(Collections.emptyList());
         Exception exception = assertThrows(NotFoundException.class, () -> service.readByNewsId(1L));
         String expectedMessage = exception.getMessage();
-        assertEquals(String.format(ServiceErrorCode.AUTHOR_DOES_NOT_EXIST_FOR_NEWS_ID.getErrorMessage(), 1), expectedMessage);
+        assertEquals(String.format(ServiceErrorCode.TAG_DOES_NOT_EXIST_FOR_NEWS_ID.getErrorMessage(), 1), expectedMessage);
     }
-
 }
