@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = { JpaRepositoryConfig.class })
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-class RepositoryTest {
+class BaseRepositoryTest {
 
     static final String AUTHOR_NAME = "TestAuthorName";
     static final String TAG_NAME = "TestTagName";
@@ -116,6 +116,18 @@ class RepositoryTest {
         nullCheckSpecification(searchSpecification);
     }
 
+    @Test
+    void shouldFindEntityById() {
+        Optional<News> news = newsRepository.findById(expectedNews.getId());
+        assertThat(news).isPresent();
+    }
+
+    @Test
+    void shouldReadEntityByNewsId() {
+        List<Author> authors = authorRepository.readByNewsId(news.getId());
+        assertThat(authors.get(0).getId()).isEqualTo(author.getId());
+    }
+
     void shouldFindContainEntity(EntitySearchSpecification entitySearchSpecification) {
         entitySearchSpecification.setSpecification(new SearchFilterSpecificationBuilder<>("")
                 .with(new SearchCriteria("title", "cn", "T"))
@@ -162,18 +174,6 @@ class RepositoryTest {
                 .build());
         Page<News> pages = newsRepository.readAll(entitySearchSpecification);
         assertThat(pages.entities()).isEmpty();
-    }
-
-    @Test
-    void shouldFindEntityById() {
-        Optional<News> news = newsRepository.findById(expectedNews.getId());
-        assertThat(news).isPresent();
-    }
-
-    @Test
-    void shouldReadEntityByNewsId() {
-        List<Author> authors = authorRepository.readByNewsId(news.getId());
-        assertThat(authors.get(0).getId()).isEqualTo(author.getId());
     }
 
 }
