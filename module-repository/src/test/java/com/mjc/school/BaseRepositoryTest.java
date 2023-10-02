@@ -59,6 +59,7 @@ class BaseRepositoryTest {
     Author expectedAuthor;
     News news;
     News expectedNews;
+    EntitySearchSpecification searchSpecification;
 
 
     @BeforeEach
@@ -82,6 +83,11 @@ class BaseRepositoryTest {
         expectedAuthor = authorRepository.save(author);
         expectedNews = newsRepository.save(news);
         expectedComment = commentRepository.save(comment);
+
+        searchSpecification = EntitySearchSpecification
+                .builder()
+                .specification(Collections.emptyList(), "")
+                .build();
     }
 
     @Test
@@ -89,7 +95,6 @@ class BaseRepositoryTest {
         Page<News> pages;
         newsRepository.save(News.builder().title("Test").build());
 
-        EntitySearchSpecification searchSpecification = new EntitySearchSpecification();
         assertNull(SearchOperation.getDataOption(""));
         assertNull(SearchOperation.getSimpleOperation(""));
 

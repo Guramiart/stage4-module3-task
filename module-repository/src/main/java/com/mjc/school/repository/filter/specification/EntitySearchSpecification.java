@@ -19,4 +19,13 @@ public class EntitySearchSpecification {
     private Specification specification;
     private String option;
 
+    public static class EntitySearchSpecificationBuilder {
+        public EntitySearchSpecificationBuilder specification(List<SearchCriteria> searchCriteria, String option) {
+            this.specification = new SearchFilterSpecificationBuilder<>(option)
+                    .with(searchCriteria)
+                    .build();
+            return this;
+        }
+    }
+
 }
