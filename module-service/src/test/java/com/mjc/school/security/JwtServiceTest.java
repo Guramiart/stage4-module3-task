@@ -9,7 +9,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JwtServiceTest {
+class JwtServiceTest {
 
     private final static String SECRET = "2ffa1ad0df4bc392140f463d0b4120dc51288abebbf3a1cff3523fa4b217643b";
     private final JwtService jwtService = new JwtService();
