@@ -21,7 +21,7 @@ public class AuthenticateService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtService jwtService;
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     public AuthenticateResponse register(RegisterRequest request) {
         User user = User.builder()
