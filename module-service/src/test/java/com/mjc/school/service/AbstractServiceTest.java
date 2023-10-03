@@ -97,6 +97,8 @@ class AbstractServiceTest {
         PageDtoResponse<NewsDtoResponse> newsWithCriteria = newsService.readAll(
                 new ResourceSearchDtoRequest(0, 0, List.of("title:asc"), List.of("title:eq:T"), "all"));
         assertEquals(newsWithCriteria.modelDtoList(), newsMapper.modelListToDto(newsList));
+        assertEquals(1, newsWithCriteria.page());
+        assertEquals(3, newsWithCriteria.size());
         PageDtoResponse<NewsDtoResponse> newsWithoutCriteria = newsService.readAll(
                 new ResourceSearchDtoRequest(0, 0, null, null, null));
         assertEquals(newsWithoutCriteria.modelDtoList(), newsMapper.modelListToDto(newsList));
