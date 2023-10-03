@@ -125,9 +125,7 @@ class AbstractServiceTest {
     void shouldThrowExceptionWhenCreateInvalidEntity() {
         given(newsMapper.dtoToModel(any(NewsDtoRequest.class))).willReturn(news);
         given(newsRepository.save(any())).willThrow(new PersistentObjectException(""));
-        Exception exception = assertThrows(ResourceConflictServiceException.class, () -> {
-            newsService.create(request);
-        });
+        Exception exception = assertThrows(ResourceConflictServiceException.class, () -> newsService.create(request));
         String expectedMessage = exception.getMessage();
         assertEquals(String.format(ServiceErrorCode.NEWS_CONFLICT.getErrorMessage(), 1), expectedMessage);
     }
@@ -144,9 +142,7 @@ class AbstractServiceTest {
     void shouldReturnNotFoundErrorMessage() {
         final Long id = 1L;
         given(newsRepository.findById(id)).willReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class, () -> {
-            newsService.readById(1L);
-        });
+        Exception exception = assertThrows(NotFoundException.class, () -> newsService.readById(1L));
         String expectedMessage = exception.getMessage();
         assertEquals(String.format(ServiceErrorCode.NEWS_ID_DOES_NOT_EXIST.getErrorMessage(), 1), expectedMessage);
     }
@@ -166,9 +162,7 @@ class AbstractServiceTest {
     @Test
     void shouldThrowExceptionWhenUpdateNonExistNews() {
         given(newsRepository.existsById(any(Long.class))).willReturn(false);
-        Exception exception = assertThrows(NotFoundException.class, () -> {
-            newsService.update(1L, request);
-        });
+        Exception exception = assertThrows(NotFoundException.class, () -> newsService.update(1L, request));
         String expectedMessage = exception.getMessage();
         assertEquals(String.format(ServiceErrorCode.NEWS_ID_DOES_NOT_EXIST.getErrorMessage(), 1), expectedMessage);
     }
@@ -185,9 +179,7 @@ class AbstractServiceTest {
     @Test
     void shouldThrowExceptionWhenDeleteNonExistNews() {
         given(newsRepository.existsById(any(Long.class))).willReturn(false);
-        Exception exception = assertThrows(NotFoundException.class, () -> {
-            newsService.deleteById(1L);
-        });
+        Exception exception = assertThrows(NotFoundException.class, () -> newsService.deleteById(1L));
         String expectedMessage = exception.getMessage();
         assertEquals(String.format(ServiceErrorCode.NEWS_ID_DOES_NOT_EXIST.getErrorMessage(), 1), expectedMessage);
     }
