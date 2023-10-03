@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
                 "SELECT r FROM Role r JOIN r.users u WHERE u.id = :userId ", Role.class);
         query.setParameter("userId", user.getId());
         user.setAuthorities(query.getResultList().stream().map(r ->
-                new SimpleGrantedAuthority(r.getAuthority())).collect(Collectors.toList()));
+                new SimpleGrantedAuthority(r.getAuthority())).toList());
         return user;
     }
 
