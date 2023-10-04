@@ -47,7 +47,7 @@ public class NewsController
     }
 
     @Override
-    @GetMapping(produces = "application/vnd.example.api.v2+json")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Retrieve list of news", response = NewsDtoResponse.class)
     @ApiResponses(value = {
@@ -82,7 +82,7 @@ public class NewsController
     }
 
     @Override
-    @GetMapping(value = PathConstants.ID_PATH, produces = "application/vnd.example.api.v2+json")
+    @GetMapping(value = PathConstants.ID_PATH)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Retrieve specific news by provided id", response = NewsDtoResponse.class)
     @ApiResponses(value = {
