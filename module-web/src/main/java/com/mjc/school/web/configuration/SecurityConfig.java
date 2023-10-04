@@ -1,4 +1,4 @@
-package com.mjc.school.configuration;
+package com.mjc.school.web.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
