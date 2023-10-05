@@ -1,4 +1,4 @@
-package com.mjc.school.configuration;
+package com.mjc.school.web.configuration;
 
 import com.mjc.school.service.security.UserService;
 import lombok.RequiredArgsConstructor;
