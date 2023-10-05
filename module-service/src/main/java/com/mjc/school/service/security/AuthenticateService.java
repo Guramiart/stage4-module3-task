@@ -19,6 +19,7 @@ import java.util.Set;
 public class AuthenticateService {
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final BCryptPasswordEncoder encoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -27,9 +28,9 @@ public class AuthenticateService {
         User user = User.builder()
                 .username(request.username())
                 .password(encoder.encode(request.password()))
-                .roles(Set.of(Role.builder().authority("USER").build()))
+                .roles(Set.of(Role.builder().name("USER").build()))
                 .build();
-        String jwt = jwtService.generateToken(userRepository.save(user));
+        String jwt = jwtService.generateToken(userService.save(user));
         return new AuthenticateResponse(jwt);
     }
 

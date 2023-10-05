@@ -54,7 +54,7 @@ class AuthenticationServiceTest {
         user = User.builder()
                 .username(registerRequest.username())
                 .password(encoder.encode(registerRequest.password()))
-                .roles(Set.of(Role.builder().authority("USER").build()))
+                .roles(Set.of(Role.builder().name("USER").build()))
                 .build();
     }
 

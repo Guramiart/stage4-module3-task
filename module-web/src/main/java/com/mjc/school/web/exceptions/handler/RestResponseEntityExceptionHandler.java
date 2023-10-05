@@ -1,5 +1,6 @@
 package com.mjc.school.web.exceptions.handler;
 
+import com.mjc.school.service.exceptions.UniqueConstraintException;
 import com.mjc.school.web.exceptions.ErrorResponse;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ServiceErrorCode;
@@ -60,6 +61,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 ServiceErrorCode.RESOURCE_NOT_FOUND.getErrorMessage(),
                 ex.getMessage()
         ), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ UniqueConstraintException.class })
+    protected ResponseEntity<Object> handleUniqueConstraintConflict(UniqueConstraintException ex, WebRequest request) {
+        return new ResponseEntity<>(new ErrorResponse(
+                ServiceErrorCode.CONFLICT.getErrorCode(),
+                ServiceErrorCode.CONFLICT.getErrorMessage(),
+                ex.getMessage()
+        ), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({ ServiceException.class })
