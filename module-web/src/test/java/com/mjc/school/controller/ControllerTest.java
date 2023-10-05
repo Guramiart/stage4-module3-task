@@ -6,41 +6,36 @@ import io.restassured.http.ContentType;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
+@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ControllerTest {
+class ControllerTest {
 
-    @Autowired
-    private Environment environment;
     @LocalServerPort
-    private int port;
-    private final Map<String, String> headers = new HashMap<>();
+    int port;
+    private final ControllerTestData controllerTestData = new ControllerTestData();
+    private static final Map<String, String> headers = new HashMap<>();
 
-    private final List<String> pathList = new ArrayList<>() {
-        {
-            add(PathConstants.TAG_PATH);
-            add(PathConstants.AUTHOR_PATH);
-            add(PathConstants.NEWS_PATH);
-            add(PathConstants.COMMENT_PATH);
-        }
-    };
+    ControllerTest() throws JSONException {
+    }
 
     @BeforeEach
-    protected void setup() throws JSONException {
-        RestAssured.baseURI = environment.getProperty("test.server") + port;
+    public void init() {
+        RestAssured.port = port;
+    }
 
+    @Test
+    @Order(1)
+    void authenticate() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", "TestUsername");
         jsonObject.put("password", "TestPassword");
@@ -67,20 +62,80 @@ public class ControllerTest {
     }
 
     @Test
+    @Order(2)
     void basicPingTest() {
-        pathList.forEach(el -> {
-            given().headers(headers).when()
+        controllerTestData.getPathList().forEach(el ->
+                given().headers(headers).when()
                     .get(el)
                     .then()
-                    .assertThat().statusCode(HttpStatus.OK.value());
-        });
+                    .assertThat().statusCode(HttpStatus.OK.value()));
     }
 
-    void shouldCreateNewEntity() {}
+    @Test
+    @Order(3)
+    void shouldCreateNewEntity() {
+        final int[] index = {0};
+        controllerTestData.getPathList().forEach(path ->
+                given().headers(headers)
+                    .contentType(ContentType.JSON)
+                    .body(controllerTestData.getTestData().get(index[0]++))
+                    .when()
+                    .post(path)
+                    .then()
+                    .assertThat().statusCode(HttpStatus.CREATED.value()));
+    }
 
-    void shouldFindEntityByProvidedId() {}
+    @Test
+    @Order(4)
+    void shouldFindEntityByProvidedId() {
+        controllerTestData.getPathList().forEach(path ->
+                given().headers(headers)
+                    .contentType(ContentType.JSON)
+                    .pathParam("id", 1)
+                    .when()
+                    .get(path + PathConstants.ID_PATH)
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value()));
 
-    void shouldUpdateEntity() {}
+        List.of("/authors", "/tags", "/comments").forEach(el ->
+                given().headers(headers)
+                    .contentType(ContentType.JSON)
+                    .pathParam("id", 1)
+                    .when()
+                    .get(PathConstants.NEWS_PATH + PathConstants.ID_PATH + el)
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value()));
+    }
 
-    void shouldDeleteEntityByProvidedId() {}
+    @Test
+    @Order(5)
+    void shouldUpdateEntity() {
+        final int[] index = {0};
+        controllerTestData.getPathList().forEach(path ->
+                given().headers(headers)
+                        .contentType(ContentType.JSON)
+                        .body(controllerTestData.getUpdatedTestData().get(index[0]++))
+                        .pathParam("id", "1")
+                        .when()
+                        .patch(path + PathConstants.ID_PATH)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value()));
+    }
+
+    @Test
+    @Order(6)
+    void shouldDeleteEntityByProvidedId() {
+        controllerTestData.getDeletionPathList().forEach(path ->
+                given().headers(headers)
+                        .contentType(ContentType.JSON)
+                        .pathParam("id", 1)
+                        .when()
+                        .delete(path + PathConstants.ID_PATH)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.NO_CONTENT.value()));
+    }
 }
