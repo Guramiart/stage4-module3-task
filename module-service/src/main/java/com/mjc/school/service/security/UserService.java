@@ -1,14 +1,11 @@
 package com.mjc.school.service.security;
 
-import com.mjc.school.repository.security.impl.RoleRepository;
 import com.mjc.school.repository.security.impl.UserRepository;
 import com.mjc.school.repository.security.model.Role;
 import com.mjc.school.repository.security.model.User;
-import com.mjc.school.service.exceptions.ResourceConflictServiceException;
 import com.mjc.school.service.exceptions.ServiceErrorCode;
 import com.mjc.school.service.exceptions.UniqueConstraintException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.PersistentObjectException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +16,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.validation.ConstraintViolationException;
-import java.rmi.ServerError;
-import java.sql.SQLException;
 
 @Service
 @RequiredArgsConstructor

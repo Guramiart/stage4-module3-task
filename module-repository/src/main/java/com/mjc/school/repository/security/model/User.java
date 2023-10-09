@@ -1,10 +1,7 @@
 package com.mjc.school.repository.security.model;
 
 import com.mjc.school.repository.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,12 +18,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.Transient;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "username")
 
 @Entity
 @Table(name = "users")
@@ -49,7 +48,7 @@ public class User implements BaseEntity<Long>, UserDetails {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "role_id") }
     )
-    private Set<Role> roles;
+    private final Set<Role> roles = new HashSet<>();
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
