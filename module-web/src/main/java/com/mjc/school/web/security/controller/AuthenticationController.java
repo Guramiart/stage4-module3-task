@@ -4,7 +4,7 @@ import com.mjc.school.service.security.AuthenticateService;
 import com.mjc.school.service.security.request.AuthenticateRequest;
 import com.mjc.school.service.security.request.RegisterRequest;
 import com.mjc.school.service.security.response.AuthenticateResponse;
-import com.mjc.school.web.controller.PathConstants;
+import com.mjc.school.web.controller.constants.PathConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

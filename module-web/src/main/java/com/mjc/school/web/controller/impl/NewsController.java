@@ -1,7 +1,7 @@
 package com.mjc.school.web.controller.impl;
 
 import com.mjc.school.web.controller.AbstractController;
-import com.mjc.school.web.controller.PathConstants;
+import com.mjc.school.web.controller.constants.PathConstants;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.dto.query.ResourceSearchDtoRequest;
 import com.mjc.school.service.dto.request.NewsDtoRequest;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -116,6 +117,7 @@ public class NewsController
     }
 
     @Override
+    @Secured(value = { "ROLE_ADMIN" })
     @PatchMapping(value = PathConstants.ID_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update specific news by provided id", response = NewsDtoResponse.class)
@@ -133,6 +135,7 @@ public class NewsController
     }
 
     @Override
+    @Secured(value = { "ROLE_ADMIN" })
     @DeleteMapping(value = PathConstants.ID_PATH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete specific news by provided id", response = TagDtoResponse.class)

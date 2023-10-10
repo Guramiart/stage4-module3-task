@@ -1,10 +1,13 @@
 package com.mjc.school.security;
 
+import com.mjc.school.repository.security.impl.RoleRepository;
 import com.mjc.school.repository.security.impl.UserRepository;
 import com.mjc.school.repository.security.model.Role;
 import com.mjc.school.repository.security.model.User;
 import com.mjc.school.service.security.AuthenticateService;
 import com.mjc.school.service.security.JwtService;
+import com.mjc.school.service.security.RoleService;
+import com.mjc.school.service.security.UserService;
 import com.mjc.school.service.security.request.AuthenticateRequest;
 import com.mjc.school.service.security.request.RegisterRequest;
 import com.mjc.school.service.security.response.AuthenticateResponse;
@@ -19,9 +22,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Optional;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
@@ -29,13 +29,14 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
-
-    @Mock
-    private UserRepository userRepository;
     @Mock
     private BCryptPasswordEncoder encoder;
     @Mock
     private JwtService jwtService;
+    @Mock
+    private UserService userService;
+    @Mock
+    private RoleService roleService;
     @Mock
     private AuthenticationManager authenticationManager;
     @InjectMocks
@@ -44,23 +45,26 @@ class AuthenticationServiceTest {
     private RegisterRequest registerRequest;
     private AuthenticateRequest authenticateRequest;
 
-    private User user;
+    private Role role;
 
     @BeforeEach
     public void init() {
         registerRequest = new RegisterRequest("TestUsername", "TestPassword");
         authenticateRequest = new AuthenticateRequest("TestUsername", "TestPassword");
 
-        user = User.builder()
+        role = Role.builder()
+                .name("USER")
+                .build();
+        User user = User.builder()
                 .username(registerRequest.username())
                 .password(encoder.encode(registerRequest.password()))
-                .roles(Set.of(Role.builder().name("USER").build()))
                 .build();
+        role.addUser(user);
     }
 
     @Test
     void shouldRegisterUser() {
-        given(userRepository.save(any())).willReturn(user);
+        given(roleService.findByRoleName(any())).willReturn(role);
         given(jwtService.generateToken(any())).willReturn("TestToken");
 
         AuthenticateResponse response = authenticateService.register(registerRequest);
@@ -71,7 +75,6 @@ class AuthenticationServiceTest {
     void shouldAuthenticateUser() {
         Authentication authentication = Mockito.mock(Authentication.class);
         given(authenticationManager.authenticate(isA(Authentication.class))).willReturn(authentication);
-        given(userRepository.findByUsername(any())).willReturn(Optional.ofNullable(user));
         given(jwtService.generateToken(any())).willReturn("TestToken");
 
         AuthenticateResponse response = authenticateService.authenticate(authenticateRequest);

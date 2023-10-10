@@ -41,11 +41,16 @@ class UserServiceTest {
 
     @BeforeEach
     public void init() {
+        Role role = Role.builder()
+                .name("USER")
+                .build();
+
         user = User.builder()
                 .username("TestUsername")
                 .password("TestPassword")
-                .roles(Set.of(Role.builder().authority("USER").build()))
                 .build();
+
+        role.addUser(user);
     }
 
     @Test
@@ -55,7 +60,7 @@ class UserServiceTest {
         given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
         given(entityManager.createQuery("SELECT r FROM Role r JOIN r.users u WHERE u.id = :userId ", Role.class))
                 .willReturn(query);
-        given(query.getResultList()).willReturn(List.of(Role.builder().authority("USER").build()));
+        given(query.getResultList()).willReturn(List.of(Role.builder().name("USER").build()));
 
         UserDetails userDetails = userService.loadUserByUsername(username);
 

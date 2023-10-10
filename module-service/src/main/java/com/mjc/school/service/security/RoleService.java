@@ -3,7 +3,6 @@ package com.mjc.school.service.security;
 import com.mjc.school.repository.security.impl.RoleRepository;
 import com.mjc.school.repository.security.model.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

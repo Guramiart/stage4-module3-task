@@ -1,14 +1,16 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.web.controller.PathConstants;
+import com.mjc.school.web.controller.constants.PathConstants;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +21,12 @@ import static io.restassured.RestAssured.given;
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ControllerTest {
-
     @LocalServerPort
     int port;
     private final ControllerTestData controllerTestData = new ControllerTestData();
     private static final Map<String, String> headers = new HashMap<>();
 
+    @Autowired
     ControllerTest() throws JSONException {
     }
 
@@ -35,10 +37,15 @@ class ControllerTest {
 
     @Test
     @Order(1)
+    @Sql(scripts = { "classpath:admin-user.sql" })
     void authenticate() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", "TestUsername");
         jsonObject.put("password", "TestPassword");
+
+        JSONObject adminJsonObject = new JSONObject();
+        adminJsonObject.put("username", "TestAdmin");
+        adminJsonObject.put("password", "TestPassword");
 
         given()
                 .contentType(ContentType.JSON)
@@ -51,7 +58,7 @@ class ControllerTest {
 
         String token = given()
                 .contentType(ContentType.JSON)
-                .body(jsonObject.toString())
+                .body(adminJsonObject.toString())
                 .when()
                 .post(PathConstants.AUTH_PATH + "/authenticate")
                 .jsonPath()

@@ -1,4 +1,4 @@
-package com.mjc.school.web.controller;
+package com.mjc.school.web.controller.constants;
 
 public class PathConstants {
 
