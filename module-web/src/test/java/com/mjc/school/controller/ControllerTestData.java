@@ -1,6 +1,6 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.web.controller.PathConstants;
+import com.mjc.school.web.controller.constants.PathConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

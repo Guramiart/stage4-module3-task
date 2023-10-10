@@ -16,7 +16,8 @@ public enum ServiceErrorCode {
     VALIDATION_ERROR("000060", "Validation error"),
     RESOURCE_NOT_FOUND("000070", ""),
     API_NOT_SUPPORTED("000080", "Api not supported for accept header"),
-    NOT_SUPPORTED("000090", "Operation not supported");
+    NOT_SUPPORTED("000090", "Operation not supported"),
+    CONFLICT("000100", "Conflict with authorization request. Username %s is already exist");
 
     private final String errorCode;
     private final String errorMessage;
