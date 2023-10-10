@@ -23,7 +23,7 @@ public class AuthenticateService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticateResponse register(RegisterRequest request) {
-        Role role = roleService.findByRoleName("USER");
+        Role role = roleService.findByRoleName("ROLE_USER");
         User user = User.builder()
                 .username(request.username())
                 .password(encoder.encode(request.password()))

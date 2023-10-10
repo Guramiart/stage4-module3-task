@@ -1,4 +1,4 @@
-INSERT INTO role (id, authority) VALUES(default, 'ROLE_ADMIN') ON CONFLICT (authority) DO NOTHING;
+INSERT INTO role (id, name) VALUES(default, 'ROLE_ADMIN') ON CONFLICT (name) DO NOTHING;
 INSERT INTO users (id, username, password)
     VALUES(default, 'TestAdmin', '$2a$10$5waLhm1usEcTMwQcoJQBmOhmoZi1tftwXyfol6E9CiGZaj9kNH0Bm')
     ON CONFLICT (username) DO NOTHING;
