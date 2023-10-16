@@ -34,6 +34,8 @@ public class SecurityConfig extends GlobalMethodSecurityConfiguration {
                     .permitAll()
                     .antMatchers("/swagger-ui/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**")
                     .permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/api/**", HttpMethod.GET.name()))
+                    .permitAll()
                     .anyRequest()
                     .authenticated()
                 .and()
