@@ -49,6 +49,7 @@ public class NewsController
 
     @Override
     @GetMapping
+    @CrossOrigin(origins = { "http://localhost:4200" })
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Retrieve list of news", response = NewsDtoResponse.class)
     @ApiResponses(value = {
