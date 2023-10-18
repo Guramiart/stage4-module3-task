@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-
+//TODO: refactor with test containers
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ControllerTest {
@@ -37,15 +37,14 @@ class ControllerTest {
 
     @Test
     @Order(1)
-    @Sql(scripts = { "classpath:admin-user.sql" })
     void authenticate() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", "TestUsername");
         jsonObject.put("password", "TestPassword");
 
         JSONObject adminJsonObject = new JSONObject();
-        adminJsonObject.put("username", "TestAdmin");
-        adminJsonObject.put("password", "TestPassword");
+        adminJsonObject.put("username", "admin");
+        adminJsonObject.put("password", "admin");
 
         given()
                 .contentType(ContentType.JSON)
@@ -145,4 +144,5 @@ class ControllerTest {
                         .assertThat()
                         .statusCode(HttpStatus.NO_CONTENT.value()));
     }
+
 }

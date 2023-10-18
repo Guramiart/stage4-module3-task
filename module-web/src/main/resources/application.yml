@@ -2,15 +2,21 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/news-management
+    url: jdbc:postgresql://localhost:5432/news-management-dev
     username: root
     password: root
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+flyway:
+  url: jdbc:postgresql://localhost:5432
+  schemas: news-management-dev
+  user: root
+  password: root
 
 application:
   security:

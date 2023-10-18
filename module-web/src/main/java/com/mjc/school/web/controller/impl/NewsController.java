@@ -60,11 +60,11 @@ public class NewsController
             @ApiResponse(code = 500, message = "Application failed to process the request")
     })
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "int", paramType = "query", value = "Results of page to retrieve"),
-            @ApiImplicitParam(name = "size", dataType = "int", paramType = "query", value = "Number of records per page", defaultValue = "10"),
-            @ApiImplicitParam(name = "sortByAndOrder", dataType = "string", paramType = "query", value = "Sort by and order (default - title:asc)"),
-            @ApiImplicitParam(name = "searchCriteria", dataType = "string", paramType = "query", value = "Search criteria (example: name:cn:author)"),
-            @ApiImplicitParam(name = "dataOption", dataType = "string", paramType = "query", value = "Search option (all | any)"),
+            @ApiImplicitParam(name = "page", dataType = "int", dataTypeClass = Integer.class, paramType = "query", value = "Results of page to retrieve"),
+            @ApiImplicitParam(name = "size", dataType = "int", dataTypeClass = Integer.class, paramType = "query", value = "Number of records per page", defaultValue = "10"),
+            @ApiImplicitParam(name = "sortByAndOrder", dataType = "string", dataTypeClass = String.class, paramType = "query", value = "Sort by and order (default - title:asc)"),
+            @ApiImplicitParam(name = "searchCriteria", dataType = "string", dataTypeClass = String.class, paramType = "query", value = "Search criteria (example: name:cn:author)"),
+            @ApiImplicitParam(name = "dataOption", dataType = "string", dataTypeClass = String.class, paramType = "query", value = "Search option (all | any)"),
     })
     public PageDtoResponse<NewsDtoResponse> readAll(ResourceSearchDtoRequest searchRequest) {
         PageDtoResponse<NewsDtoResponse> response = service.readAll(searchRequest);

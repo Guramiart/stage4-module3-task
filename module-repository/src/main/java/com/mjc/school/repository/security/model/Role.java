@@ -21,15 +21,15 @@ import java.util.Set;
 @EqualsAndHashCode(of = "name")
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role implements BaseEntity<Long>, GrantedAuthority {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "Name", unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "roles")

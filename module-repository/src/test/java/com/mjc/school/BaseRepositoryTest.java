@@ -93,7 +93,7 @@ class BaseRepositoryTest {
     @Test
     void shouldReadEntityWithCriteria() {
         Page<News> pages;
-        newsRepository.save(News.builder().title("Test").build());
+        newsRepository.save(News.builder().title("Test").content("Content").build());
 
         assertNull(SearchOperation.getDataOption(""));
         assertNull(SearchOperation.getSimpleOperation(""));

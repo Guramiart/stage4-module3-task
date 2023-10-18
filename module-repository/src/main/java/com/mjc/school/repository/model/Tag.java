@@ -27,9 +27,10 @@ public class Tag implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "Name", unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)

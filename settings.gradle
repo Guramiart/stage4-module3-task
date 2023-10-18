@@ -1,5 +1,6 @@
 pluginManagement {
     plugins {
+        id 'org.flywaydb.flyway' version flywayVersion
         id 'org.springframework.boot' version springBootPluginVersion
         id 'io.spring.dependency-management' version springBootDependencyManagementVersion
     }
