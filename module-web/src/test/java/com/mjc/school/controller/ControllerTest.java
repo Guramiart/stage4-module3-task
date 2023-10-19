@@ -13,11 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -33,6 +35,7 @@ class ControllerTest {
     private static final Map<String, String> headers = new HashMap<>();
 
     @Container
+    @SuppressWarnings("rawtypes")
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer("postgres:15-alpine")
             .withDatabaseName("test-db")
             .withUsername("root")
@@ -66,6 +69,7 @@ class ControllerTest {
 
     @Test
     @Order(1)
+    @Sql("classpath:create_admin.sql")
     void authenticate() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", "TestUsername");
@@ -83,7 +87,7 @@ class ControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value());
-/*
+
         String token = given()
                 .contentType(ContentType.JSON)
                 .body(adminJsonObject.toString())
@@ -95,7 +99,6 @@ class ControllerTest {
         headers.put("Accept", "application/json");
         headers.put("Authorization", "Bearer " + token);
 
- */
     }
 
     @Test
@@ -107,7 +110,7 @@ class ControllerTest {
                     .then()
                     .assertThat().statusCode(HttpStatus.OK.value()));
     }
-/*
+
     @Test
     @Order(3)
     void shouldCreateNewEntity() {
@@ -175,5 +178,5 @@ class ControllerTest {
                         .assertThat()
                         .statusCode(HttpStatus.NO_CONTENT.value()));
     }
-*/
+
 }
