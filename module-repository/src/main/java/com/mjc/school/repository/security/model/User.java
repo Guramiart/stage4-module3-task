@@ -32,21 +32,21 @@ import java.util.Set;
 public class User implements BaseEntity<Long>, UserDetails {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "Username", unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "Password")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(
-            name = "user_role",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+            name = "users_roles",
+            joinColumns = { @JoinColumn(name = "User_Id") },
+            inverseJoinColumns = { @JoinColumn(name = "Role_Id") }
     )
     private final Set<Role> roles = new HashSet<>();
 

@@ -25,24 +25,25 @@ public class News implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "Title")
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "Content")
     private String content;
 
-    @Column(name = "created")
+    @Column(name = "Created")
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @Column(name = "updated")
+    @Column(name = "Updated")
     @LastModifiedDate
     private LocalDateTime lastUpdatedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "Author_Id")
     private Author author;
 
     @ManyToMany(
@@ -51,8 +52,8 @@ public class News implements BaseEntity<Long> {
     )
     @JoinTable(
             name = "news_tags",
-            joinColumns = { @JoinColumn(name = "news_id") },
-            inverseJoinColumns = { @JoinColumn(name = "tags_id") }
+            joinColumns = { @JoinColumn(name = "News_Id") },
+            inverseJoinColumns = { @JoinColumn(name = "Tag_Id") }
     )
     private List<Tag> tags;
 

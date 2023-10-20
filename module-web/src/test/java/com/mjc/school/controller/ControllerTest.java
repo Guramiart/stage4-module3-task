@@ -10,7 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +24,8 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
+@Testcontainers
+@ActiveProfiles("test-containers")
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ControllerTest {
@@ -25,6 +33,30 @@ class ControllerTest {
     int port;
     private final ControllerTestData controllerTestData = new ControllerTestData();
     private static final Map<String, String> headers = new HashMap<>();
+
+    @Container
+    @SuppressWarnings("rawtypes")
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer("postgres:15-alpine")
+            .withDatabaseName("test-db")
+            .withUsername("root")
+            .withPassword("root");
+
+    @DynamicPropertySource
+    static void registerPgProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", () -> "root");
+        registry.add("spring.datasource.password", () -> "root");
+    }
+
+    @BeforeAll
+    static void start() {
+        postgreSQLContainer.start();
+    }
+
+    @AfterAll
+    static void stop() {
+        postgreSQLContainer.stop();
+    }
 
     @Autowired
     ControllerTest() throws JSONException {
@@ -37,15 +69,15 @@ class ControllerTest {
 
     @Test
     @Order(1)
-    @Sql(scripts = { "classpath:admin-user.sql" })
+    @Sql("classpath:create_admin.sql")
     void authenticate() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", "TestUsername");
         jsonObject.put("password", "TestPassword");
 
         JSONObject adminJsonObject = new JSONObject();
-        adminJsonObject.put("username", "TestAdmin");
-        adminJsonObject.put("password", "TestPassword");
+        adminJsonObject.put("username", "admin");
+        adminJsonObject.put("password", "admin");
 
         given()
                 .contentType(ContentType.JSON)
@@ -66,6 +98,7 @@ class ControllerTest {
 
         headers.put("Accept", "application/json");
         headers.put("Authorization", "Bearer " + token);
+
     }
 
     @Test
@@ -145,4 +178,5 @@ class ControllerTest {
                         .assertThat()
                         .statusCode(HttpStatus.NO_CONTENT.value()));
     }
+
 }

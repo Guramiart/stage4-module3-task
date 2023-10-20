@@ -34,16 +34,17 @@ public class Comment implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Long id;
 
-    @Column(name = "content", unique = true)
+    @Column(name = "Content", unique = true)
     private String content;
 
-    @Column(name = "created")
+    @Column(name = "Created")
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @Column(name = "updated")
+    @Column(name = "Updated")
     @LastModifiedDate
     private LocalDateTime lastUpdatedDate;
 
@@ -51,7 +52,7 @@ public class Comment implements BaseEntity<Long> {
             fetch = FetchType.LAZY,
             cascade = { CascadeType.MERGE, CascadeType.PERSIST }
     )
-    @JoinColumn(name = "news_id")
+    @JoinColumn(name = "News_Id")
     private News news;
 
 }

@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'org.flywaydb.flyway'
     id 'jacoco-report-aggregation'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
@@ -7,6 +8,7 @@ plugins {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web' // to access h2 console without any additional setup
+    implementation "org.flywaydb:flyway-core:$flywayVersion"
 
     runtimeOnly 'com.h2database:h2'
 
@@ -23,4 +25,12 @@ jar {
 
 bootJar {
     enabled = false
+}
+
+flyway {
+    url = "jdbc:h2:file:${System.getProperty('user.dir')}/h2db/news_management"
+    user = 'root'
+    password = 'root'
+    baselineOnMigrate = true
+    locations = 'classpath:/db/migration'
 }
