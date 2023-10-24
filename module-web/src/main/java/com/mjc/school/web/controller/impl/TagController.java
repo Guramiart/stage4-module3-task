@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin(origins = { "http://localhost:4200" })
 @RequestMapping(value = PathConstants.TAG_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "Operations for creating, updating, retrieving and deleting tags in the application", tags = "Tags")
 public class TagController extends AbstractController<TagDtoRequest, TagDtoResponse, ResourceSearchDtoRequest, Long> {
