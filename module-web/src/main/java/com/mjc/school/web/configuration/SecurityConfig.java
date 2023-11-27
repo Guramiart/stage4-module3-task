@@ -33,6 +33,7 @@ public class SecurityConfig extends GlobalMethodSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors().and()
                 .csrf(csrf ->
                         csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/api/**")))
                 .authorizeHttpRequests()
