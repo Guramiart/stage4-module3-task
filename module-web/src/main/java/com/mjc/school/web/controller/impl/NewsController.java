@@ -24,6 +24,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = PathConstants.NEWS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "Operations for creating, updating, retrieving and deleting news in the application", tags = "News")
@@ -49,7 +50,6 @@ public class NewsController
 
     @Override
     @GetMapping
-    @CrossOrigin(origins = { "http://localhost:4200" })
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Retrieve list of news", response = NewsDtoResponse.class)
     @ApiResponses(value = {
