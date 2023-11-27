@@ -28,7 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin(
         origins = { "http://localhost:4200" },
         allowedHeaders = { "Authorization" },
-        methods = { RequestMethod.POST }
+        methods = { RequestMethod.GET, RequestMethod.POST }
 )
 @RequestMapping(value = PathConstants.NEWS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "Operations for creating, updating, retrieving and deleting news in the application", tags = "News")
