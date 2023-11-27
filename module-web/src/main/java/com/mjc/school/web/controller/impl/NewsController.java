@@ -24,8 +24,8 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@CrossOrigin
 @RestController
+@CrossOrigin(origins = { "http://localhost:4200" })
 @RequestMapping(value = PathConstants.NEWS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "Operations for creating, updating, retrieving and deleting news in the application", tags = "News")
 @SuppressWarnings({"unchecked", "rawtypes"})
