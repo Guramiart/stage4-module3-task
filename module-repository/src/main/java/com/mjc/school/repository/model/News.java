@@ -34,7 +34,7 @@ public class News implements BaseEntity<Long> {
     @Column(name = "Content")
     private String content;
 
-    @Column(name = "Created")
+    @Column(name = "Created", updatable = false)
     @CreatedDate
     private LocalDateTime createdDate;
 

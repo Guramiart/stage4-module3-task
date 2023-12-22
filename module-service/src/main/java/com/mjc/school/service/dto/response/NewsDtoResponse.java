@@ -1,5 +1,6 @@
 package com.mjc.school.service.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -13,7 +14,9 @@ public class NewsDtoResponse extends BaseResponseEntity<Long> {
 
     private final String title;
     private final String content;
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     private final LocalDateTime createdDate;
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     private final LocalDateTime lastUpdatedDate;
     private final AuthorDtoResponse authorDto;
     private final List<TagDtoResponse> tagsDto;
